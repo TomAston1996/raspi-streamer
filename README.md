@@ -5,7 +5,7 @@
 [![MIT License][license-shield]][license-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
 
-# 📄 Raspberry Pi Streamer
+# 🌐 Raspberry Pi Streamer
 
 The goal of this project is to extract performance metrics (such as CPU utilisation etc.) from a Raspberry Pi and feed it into AWS IoT Core.
 IoT Core rules will publish events to AWS middleware which will in turn transform and store the data in DynamoDB. A simple FastAPI app will be hosted on ECS
