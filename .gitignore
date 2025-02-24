@@ -11,3 +11,6 @@ wheels/
 
 # cerificates
 certs/
+
+# env files
+.env
