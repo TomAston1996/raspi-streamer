@@ -10,5 +10,25 @@ dependencies = [
     "pandas>=2.2.3",
     "pydantic>=2.10.6",
     "pydantic-settings>=2.8.0",
+    "pytest>=8.3.4",
     "python-dotenv>=1.0.1",
 ]
+
+[tool.ruff]
+line-length = 120  # Match Black's default line length
+target-version = "py311"  # Change based on your Python version
+
+[tool.ruff.format]
+quote-style = "double"  # Options: "single", "double"
+indent-style = "space"  # Options: "space", "tab"
+line-ending = "lf"  # Options: "lf", "crlf", "native"
+docstring-code-format = true  # Format code inside docstrings
+
+[tool.ruff.lint]
+select = ["I"]  # Enables Ruff's import sorting (equivalent to isort)
+fixable = ["I"]  # Allows automatic fixing of import order
+
+[tool.pytest.ini_options]
+testpaths = ["raspberry_pi/tests"]
+pythonpath = ["raspberry_pi/src"]
+addopts = "-v"

@@ -3,13 +3,13 @@ This file is used to create a MQTT client that will be used to send data to the 
 Author: Tom Aston
 """
 
-import paho.mqtt.client as mqtt
-from paho.mqtt.client import Client
+import json
 import ssl
 from typing import Any
-import json
 
+import paho.mqtt.client as mqtt
 from config import config_manager
+from paho.mqtt.client import Client
 from payloads import CPUMetricPayload
 
 
@@ -31,9 +31,7 @@ class MQTTClient:
             tls_version=ssl.PROTOCOL_TLSv1_2,
         )
 
-        self.client.tls_insecure_set(
-            True
-        )  # AWS IoT does not provide a broker certificate
+        self.client.tls_insecure_set(True)  # AWS IoT does not provide a broker certificate
 
     def __on_connect(self, client: Client, userdata: Any, flags: dict, rc: int) -> None:
         """Callback function for when the client receives a CONNACK response from the server.
@@ -74,6 +72,10 @@ class MQTTClient:
             self.client.publish(topic=topic, payload=payload, qos=0, retain=False)
         except ValueError:
             print("Error publishing message")
+        except TypeError:
+            print("Error publishing message")
+        except json.JSONDecodeError:
+            print("Error decoding JSON payload")
 
     def stop(self) -> None:
         """Stop the MQTT loop."""

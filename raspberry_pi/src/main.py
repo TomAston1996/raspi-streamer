@@ -3,8 +3,8 @@ App entry point
 Author: Tom Aston
 """
 
-from mqtt_client import MQTTClient
 from cpu_metric import publish_cpu_metrics
+from mqtt_client import MQTTClient
 
 
 def main() -> None:

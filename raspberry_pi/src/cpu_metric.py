@@ -6,8 +6,8 @@ Author: Tom Aston
 import random
 import time
 
-from mqtt_client import MQTTClient
 from config import config_manager
+from mqtt_client import MQTTClient
 from payloads import CPUMetricPayload
 
 TOPIC = "device/cpu"
