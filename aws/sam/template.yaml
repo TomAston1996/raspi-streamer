@@ -1,0 +1,16 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  sam-rpi-iot-pipeline
+
+  Simple SAM template for deploying a Lambda function that collects Raspberry Pi CPU metrics.
+
+Resources:
+  RpiCpuMetricsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Handler: rpi_cpu_metrics/handler.handler
+      Runtime: python3.11
+      Architectures:
+      - x86_64

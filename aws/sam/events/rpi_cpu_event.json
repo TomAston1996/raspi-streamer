@@ -1,0 +1,11 @@
+{
+  "cpu_usage": 75.4,
+  "timestamp": 1294942929,
+  "device": "Raspberry Pi",
+  "location": "Home",
+  "unit": "percentage",
+  "topic": "TOPIC",
+  "loop_count": 2,
+  "project": "rpi_cpu_usage",
+  "version": "0.1"
+}
