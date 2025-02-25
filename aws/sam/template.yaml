@@ -5,7 +5,29 @@ Description: >
 
   Simple SAM template for deploying a Lambda function that collects Raspberry Pi CPU metrics.
 
+# https://stackoverflow.com/questions/66579433/how-to-add-environment-variables-in-template-yaml-in-a-secured-way 
+Parameters:
+  DatabaseTableName:
+    Type: String
+    Description: Name of the DynamoDB table for storing Raspberry Pi CPU metrics
+    Default: RpiCpuMetrics
+    NoEcho: true
+
 Resources:
+  # DynamoDB Table for storing Raspberry Pi CPU metrics
+  RpiCpuMetricsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Ref DatabaseTableName
+      AttributeDefinitions:
+        - AttributeName: id  # Partition Key
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST  # On-demand billing mode
+  
+  # Lambda Function for collecting Raspberry Pi CPU metrics and storing them in DynamoDB
   RpiCpuMetricsFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -14,3 +36,11 @@ Resources:
       Runtime: python3.11
       Architectures:
       - x86_64
+      Environment:
+        Variables:
+          DB_TABLE_NAME: !Ref RpiCpuMetricsTable
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - DynamoDBCrudPolicy:  # Grants CRUD permissions to the Lambda function on the table
+            TableName: !Ref RpiCpuMetricsTable
+          
