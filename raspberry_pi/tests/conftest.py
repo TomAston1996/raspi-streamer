@@ -11,7 +11,7 @@ from ..src.mqtt_client import MQTTClient
 
 
 @pytest.fixture
-def mock_mqtt_client():
+def mock_mqtt_client() -> MQTTClient:
     """Fixture to create a mock MQTTClient instance."""
     client = MQTTClient()
     client.client = Mock()

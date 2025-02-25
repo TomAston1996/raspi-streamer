@@ -3,13 +3,8 @@ Test suite for the CPU metric.
 Author: Tom Aston
 """
 
-from unittest.mock import Mock
-
-import pytest
-
 from ..src.cpu_metric import publish_cpu_metrics
 from ..src.mqtt_client import MQTTClient
-from ..src.payloads import CPUMetricPayload
 
 
 class TestSuiteCPUMetrics:
