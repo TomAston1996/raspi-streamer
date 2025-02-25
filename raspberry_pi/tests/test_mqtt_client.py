@@ -4,9 +4,6 @@ Author: Tom Aston
 """
 
 import json
-from unittest.mock import Mock
-
-import pytest
 
 from ..src.config import config_manager
 from ..src.mqtt_client import MQTTClient
@@ -16,13 +13,6 @@ class TestSuiteMQTTClient:
     """
     Test suite for the MQTT client
     """
-
-    @pytest.fixture
-    def mock_mqtt_client(self) -> MQTTClient:
-        """Fixture to create a mock MQTTClient instance."""
-        client = MQTTClient()
-        client.client = Mock()
-        return client
 
     def test_publish(self, mock_mqtt_client: MQTTClient) -> None:
         """Test if publish method correctly sends a message."""
