@@ -3,8 +3,10 @@ module for dynamodb table operations
 Author: Tom Aston
 """
 
+import json
 import os
 import uuid
+from decimal import Decimal
 from typing import Any
 
 import boto3
@@ -24,7 +26,7 @@ def put_item(event: dict[str, Any]) -> None:
 
     Args:
         event (dict[str, Any]): event data
-    """    
+    """
     try:
         item = {
             "device": event["device"],
@@ -33,9 +35,12 @@ def put_item(event: dict[str, Any]) -> None:
             "id": str(uuid.uuid4()),
         }
 
+        item = json.loads(
+            json.dumps(item), parse_float=Decimal
+        )  # convert float to Decimal to avoid serialization issues
+
         cpu_metric_table.put_item(Item=item)
         print("Item successfully put into DynamoDB:", item)
-
     except ValueError as e:
         print(f"ValueError: {e}")
         raise

@@ -22,10 +22,23 @@ Resources:
       AttributeDefinitions:
         - AttributeName: id  # Partition Key
           AttributeType: S
+        - AttributeName: timestamp  # GSI Sort Key
+          AttributeType: N
+        - AttributeName: cpu_usage  # GSI Partition Key
+          AttributeType: N
       KeySchema:
         - AttributeName: id
           KeyType: HASH
       BillingMode: PAY_PER_REQUEST  # On-demand billing mode
+      GlobalSecondaryIndexes:
+        - IndexName: TimestampCpuUsageIndex
+          KeySchema:
+            - AttributeName: cpu_usage
+              KeyType: HASH
+            - AttributeName: timestamp
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
   
   # Lambda Function for collecting Raspberry Pi CPU metrics and storing them in DynamoDB
   RpiCpuMetricsFunction:
