@@ -1,0 +1,20 @@
+{
+  "Records": [
+    {
+      "messageId": "059f36b4-87a3-44ab-83d2-661975830a7d",
+      "receiptHandle": "AQEBwJnKyrHigUMZj6rYigCgxlaS3SLy0a...",
+      "body": "{\"Message\": \"{\\\"cpu_usage\\\": 40, \\\"timestamp\\\": 1633529469.0, \\\"device\\\": \\\"Raspberry Pi\\\", \\\"location\\\": \\\"Home\\\", \\\"unit\\\": \\\"percentage\\\", \\\"topic\\\": \\\"device/cpu\\\", \\\"loop_count\\\": 10, \\\"project\\\": \\\"rpi-cpu-metrics\\\", \\\"version\\\": \\\"1.0.0\\\"}\"}",
+      "attributes": {
+        "ApproximateReceiveCount": "1",
+        "SentTimestamp": "1633529470459",
+        "SenderId": "594035263019",
+        "ApproximateFirstReceiveTimestamp": "1633529470461"
+      },
+      "messageAttributes": {},
+      "md5OfBody": "9bb58f26192e4ba00f9e131c2d6b8b4f",
+      "eventSource": "aws:sqs",
+      "eventSourceARN": "arn:aws:sqs:us-east-2:123456789012:my-queue",
+      "awsRegion": "us-east-2"
+    }
+  ]
+}
