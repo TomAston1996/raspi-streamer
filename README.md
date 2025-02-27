@@ -61,11 +61,11 @@ Default output format [None]: json (or text, table)
 4. Compile and package code with ```sam build```
 5. Deploy your code to AWS with ```sam deploy```
 6. Navigate to AWS to set up IoT Core or this can also be done in the terminal. The following steps are required:
-   a. Create an IoT Thing
-   b. Generate certificates for AWS certificate, private key, public key and root CA and attach to the IoT Thing.
-   c. Create an IoT Policy and attach it to the certificate.
-   d. Save the IoT Core endpoint for Raspberry Pi configuration later.
-   d. You can test the set up later using MQTT Test Client once the Raspberry Pi has been set up.
+   - Create an IoT Thing
+   - Generate certificates for AWS certificate, private key, public key and root CA and attach to the IoT Thing.
+   - Create an IoT Policy and attach it to the certificate.
+   - Save the IoT Core endpoint for Raspberry Pi configuration later.
+   - You can test the set up later using MQTT Test Client once the Raspberry Pi has been set up.
 
 ### Raspberry Pi Setup
 1. Clone the repository onto your Raspberry Pi
