@@ -17,13 +17,17 @@ for user access to the data.
 ![AWS]
 
 ## 🏢 Architecture
+
 Below is the data flow description:
 1. __Raspberry Pi__ publishes CPU usage data as MQTT messages to AWS IoT Core.
-2. __IoT Core_S applies an IoT Rule to extract relevant fields and forward the message to SNS.
+2. __IoT Core__ applies an IoT Rule to extract relevant fields and forward the message to SNS.
 3. __SNS (Simple Notification Service)__ pushes the message to an SQS Queue.
 4. __Lambda Function__ polls the __SQS Queue__, processes the message, and stores it in DynamoDB.
 5. __DynamoDB__ keeps a historical record of CPU metrics, allowing for future queries and analysis.
 6. A __FastAPI__ app hosted on __ECS__ provides a REST API interface for the client to retrieve CPU usage data from DynamoDB.
+
+![alt text](https://github.com/TomAston1996/raspi-streamer/blob/main/images/rpi-iot-project.png?raw=true)
+
 
 ## ⚙️ Setup
 
