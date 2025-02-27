@@ -35,8 +35,15 @@ class TestSuitCPUMetricPayload:
             valid_payload (CPUMetricPayload): cpu metric payload dictionary
         """
         assert set(valid_payload.keys()) == {
-            "cpu_usage", "timestamp", "device", "location", "unit",
-            "topic", "loop_count", "project", "version"
+            "cpu_usage",
+            "timestamp",
+            "device",
+            "location",
+            "unit",
+            "topic",
+            "loop_count",
+            "project",
+            "version",
         }
         assert isinstance(valid_payload["cpu_usage"], int)
         assert isinstance(valid_payload["timestamp"], float)

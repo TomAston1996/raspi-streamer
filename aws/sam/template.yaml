@@ -39,6 +39,43 @@ Resources:
               KeyType: RANGE
           Projection:
             ProjectionType: ALL
+
+   # SNS Topic
+  RpiCpuMetricsTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: RpiCpuMetricsTopic
+
+  # SQS Queue
+  RpiCpuMetricsQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: RpiCpuMetricsQueue
+
+  # SNS Subscription to SQS
+  RpiCpuMetricsSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      TopicArn: !Ref RpiCpuMetricsTopic
+      Protocol: sqs
+      Endpoint: !GetAtt RpiCpuMetricsQueue.Arn
+
+  # Policy to Allow SNS to Send Messages to SQS
+  RpiCpuMetricsQueuePolicy:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      Queues:
+        - !Ref RpiCpuMetricsQueue
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal: "*"
+            Action: SQS:SendMessage
+            Resource: !GetAtt RpiCpuMetricsQueue.Arn
+            Condition:
+              ArnEquals:
+                aws:SourceArn: !Ref RpiCpuMetricsTopic
   
   # Lambda Function for collecting Raspberry Pi CPU metrics and storing them in DynamoDB
   RpiCpuMetricsFunction:
@@ -56,4 +93,13 @@ Resources:
         - AWSLambdaBasicExecutionRole
         - DynamoDBCrudPolicy:  # Grants CRUD permissions to the Lambda function on the table
             TableName: !Ref RpiCpuMetricsTable
+        - SQSPollerPolicy:
+            QueueName: !GetAtt RpiCpuMetricsQueue.QueueName
+      Events:
+        SQSEvent:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt RpiCpuMetricsQueue.Arn
+            BatchSize: 10
+            Enabled: true
           
