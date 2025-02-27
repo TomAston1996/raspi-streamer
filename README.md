@@ -37,8 +37,8 @@ Below is the data flow description:
 ### Prerequisites
 | Dependencies | Install Guide | Applicable Devices |
 |--------------|---------------|--------------------|
-| AWS CLI |  [aws cli](https://aws.amazon.com/cli/) | Local PC/Raspberry Pi |
-| AWS SAM CLI| [sam-cli](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/install-sam-cli.html) | Local PC/Raspberry Pi |
+| AWS CLI |  [aws-cli-download](https://aws.amazon.com/cli/) | Local PC/Raspberry Pi |
+| AWS SAM CLI| [sam-cli-download](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/install-sam-cli.html) | Local PC/Raspberry Pi |
 | Python 3.11 (or Later)| [python-download](https://www.python.org/downloads/) | Local PC/Raspberry Pi |
 | Docker | [docker-download](https://www.docker.com/products/docker-desktop/) | Local PC |
 | UV| [uv-github](https://github.com/astral-sh/uv) | Local PC/Raspberry Pi |
