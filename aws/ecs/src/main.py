@@ -7,6 +7,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .config import config_manager
+from .cpu_metrics.routes import cpu_metrics_router
 
 
 class AppCreator:
@@ -41,6 +42,8 @@ class AppCreator:
             allow_methods=["*"],
             allow_headers=["*"],
         )
+
+        self.app.include_router(cpu_metrics_router, prefix=f"/api/{config_manager.VERSION}/cpu_metrics")
 
 
 app_creator = AppCreator()
