@@ -3,13 +3,27 @@ Config Manager
 Author: Tom Aston
 """
 
+from enum import Enum
+
 from pydantic_settings import BaseSettings
+
+
+class EnvrinomentEnum(Enum):
+    """
+    EnvrinomentEnum
+    """
+
+    LOCAL = "local"
+    DEV = "dev"
+    PROD = "prod"
 
 
 class ConfigManager(BaseSettings):
     """
     ConfigManager
     """
+
+    ENVIRONMENT: EnvrinomentEnum = EnvrinomentEnum.LOCAL
 
     # app config-----------------------------------------
     VERSION: str = "0.1.0"
@@ -19,6 +33,8 @@ class ConfigManager(BaseSettings):
 
     # AWS DynamoDB config-------------------------------
     DB_TABLE_NAME: str
+    DYNAMODB_ENDPOINT: str = "http://localhost:9000"
+    DYNAMODB_REGION: str
     # ---------------------------------------------------
 
     class Config:
