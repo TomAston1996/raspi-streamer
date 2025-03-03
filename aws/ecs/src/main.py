@@ -8,6 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from .config import config_manager
 from .cpu_metrics.routes import cpu_metrics_router
+from .errors import register_all_errors
 
 
 class AppCreator:
@@ -44,6 +45,8 @@ class AppCreator:
         )
 
         self.app.include_router(cpu_metrics_router, prefix=f"/api/{config_manager.VERSION}/cpu_metrics")
+
+        register_all_errors(self.app)
 
 
 app_creator = AppCreator()

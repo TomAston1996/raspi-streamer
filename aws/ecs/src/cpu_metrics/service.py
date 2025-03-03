@@ -1,14 +1,20 @@
 """
 Service module for CPU metrics
 Author: Tom Aston
+
+Resource
+--------
+- https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/dynamodb.html
+- https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/dynamodb/client/query.html
 """
 
-from typing import List
+from typing import List, Optional
 
 from boto3.dynamodb.conditions import Key
 from botocore.exceptions import ClientError
 from mypy_boto3_dynamodb.service_resource import Table
 
+from ..errors import InvalidRequestException, ServerException
 from .schemas import CpuMetricSchema
 
 
@@ -17,7 +23,18 @@ class CpuMetricsService:
     CPU Metrics Service
     """
 
-    def get_all_cpu_metrics(self, cpu_metric_table: Table) -> List[CpuMetricSchema]:
+    def get_cpu_metrics(
+        self, cpu_metric_table: Table, key: str = None, value: int | str = None, operator: str = None
+    ) -> List[CpuMetricSchema]:
+        """
+        Get CPU metrics
+        """
+        if key and value and operator:
+            return self._get_filtered_cpu_metrics(cpu_metric_table, key, value, operator)
+        else:
+            return self._get_all_cpu_metrics(cpu_metric_table)
+
+    def _get_all_cpu_metrics(self, cpu_metric_table: Table) -> List[CpuMetricSchema]:
         """
         Get all CPU metrics
         """
@@ -55,3 +72,24 @@ class CpuMetricsService:
         except ClientError as err:
             print(f"ClientError: {err}")
             raise RuntimeError("Error getting all CPU metrics") from err
+
+    def _get_filtered_cpu_metrics(
+        self, cpu_metric_table: Table, key: str, value: int | str, operator: str
+    ) -> List[CpuMetricSchema]:
+        """
+        Get a CPU metric
+        """
+        if operator not in {"eq", "gt", "lt"}:
+            raise InvalidRequestException()
+
+        try:
+            # TODO make this dynamic based on the key, value and operator
+            response = cpu_metric_table.query(
+                IndexName="TimestampCpuUsageIndex",  # Use the GSI name
+                KeyConditionExpression=Key("cpu_usage").eq(52),  # Filtering by CPU usage
+            )
+
+            return response.get("Items", [])
+        except ClientError as err:
+            print(f"ClientError: {err}")
+            raise ServerException()
