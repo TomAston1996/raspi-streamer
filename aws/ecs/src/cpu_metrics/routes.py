@@ -50,3 +50,21 @@ def create_cpu_metric(
         CpuMetricSchema: created cpu metric data
     """
     return cpu_metrics_service.create_cpu_metric(cpu_metric_table=db_table, cpu_metric=cpu_metric)
+
+
+@cpu_metrics_router.post("/batch", tags=["cpu_metrics"], status_code=status.HTTP_201_CREATED)
+def batch_create_cpu_metrics(
+    cpu_metrics: List[CpuMetricCreateSchema],
+    db_table: Table = Depends(get_db_table),
+) -> List[CpuMetricSchema]:
+    """post endpoint to create multiple cpu metrics
+
+    Args:
+        cpu_metrics (List[CpuMetricCreateSchema]): list of cpu metric data
+        db_table (Table, optional): db table. Defaults to Depends(get_db_table).
+
+    Returns:
+        List[CpuMetricSchema]: list of created cpu metric data
+    """
+    print(f"cpu_metrics: {cpu_metrics}")
+    return cpu_metrics_service.batch_create_cpu_metrics(cpu_metric_table=db_table, cpu_metrics=cpu_metrics)

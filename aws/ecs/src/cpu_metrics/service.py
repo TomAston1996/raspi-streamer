@@ -7,6 +7,7 @@ Resource
 - https://docs.aws.amazon.com/code-library/latest/ug/python_3_dynamodb_code_examples.html
 - https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/dynamodb.html
 """
+
 import time
 import uuid
 from typing import List, Optional
@@ -16,7 +17,7 @@ from botocore.exceptions import ClientError
 from mypy_boto3_dynamodb.service_resource import Table
 
 from ..errors import InvalidRequestException, ServerException
-from .schemas import CpuMetricQueryParams, CpuMetricSchema
+from .schemas import CpuMetricCreateSchema, CpuMetricQueryParams, CpuMetricSchema
 
 
 class CpuMetricsService:
@@ -151,9 +152,8 @@ class CpuMetricsService:
         }
 
         return [metric for metric in all_cpu_metrics if filter_operators[operator](metric["cpu_usage"])]
-    
 
-    def create_cpu_metric(self, cpu_metric_table: Table, cpu_metric: CpuMetricSchema) -> CpuMetricSchema:
+    def create_cpu_metric(self, cpu_metric_table: Table, cpu_metric: CpuMetricCreateSchema) -> CpuMetricSchema:
         """router facing method to create a cpu metric
 
         Args:
@@ -164,8 +164,8 @@ class CpuMetricsService:
             CpuMetricSchema: created cpu metric data
         """
         item_data = cpu_metric.model_dump()
-        item_data['id'] = str(uuid.uuid4())
-        item_data['timestamp'] = int(time.time())
+        item_data["id"] = str(uuid.uuid4())
+        item_data["timestamp"] = int(time.time())
 
         try:
             cpu_metric_table.put_item(Item=item_data)
@@ -174,3 +174,26 @@ class CpuMetricsService:
             raise ServerException()
         else:
             return item_data
+
+    def batch_create_cpu_metrics(
+        self, cpu_metric_table: Table, cpu_metrics: List[CpuMetricCreateSchema]
+    ) -> List[CpuMetricSchema]:
+        """router facing method to batch create cpu metrics
+
+        Args:
+            cpu_metric_table (Table): cpu metric table
+            cpu_metrics (List[CpuMetricSchema]): list of cpu metric data
+
+        Returns:
+            List[CpuMetricSchema]: list of created cpu metric data
+        """
+        created_items: List[CpuMetricCreateSchema] = []
+        with cpu_metric_table.batch_writer() as batch:
+            for cpu_metric in cpu_metrics:
+                item_data = cpu_metric.model_dump()
+                item_data["id"] = str(uuid.uuid4())
+                item_data["timestamp"] = int(time.time())
+                created_items.append(item_data)
+                batch.put_item(Item=item_data)
+
+        return created_items
