@@ -3,9 +3,9 @@ Schema for the CPU metrics
 Author: Tom Aston
 """
 
-from typing import Optional
+from typing import Literal, Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class CpuMetricSchema(BaseModel):
@@ -20,7 +20,9 @@ class CpuMetricSchema(BaseModel):
     timestamp: int
 
 
-class CpuMetricFilterRequestSchema(BaseModel):
-    key: str
-    value: int | str
-    operator: str  # eq, gt, lt
+class CpuMetricQueryParams(BaseModel):
+    location_value: Optional[Literal["Home", "Office", "Factory", "*"]] = Field(
+        None, description="Allowed locations are Home, Office, Factory, or *"
+    )
+    operator: Optional[Literal["eq", "gt", "lt", "*"]] = Field(None, description="Allowed operators are eq, gt, lt or *")
+    cpu_usage_value: Optional[int] = Field(None, description="CPU usage value (0-100)")

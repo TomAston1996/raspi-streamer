@@ -65,6 +65,7 @@ class Database:
                     {"AttributeName": "id", "AttributeType": "S"},  # Partition Key
                     {"AttributeName": "timestamp", "AttributeType": "N"},  # GSI Sort Key
                     {"AttributeName": "cpu_usage", "AttributeType": "N"},  # GSI Partition Key
+                    {"AttributeName": "location", "AttributeType": "S"},  # GSI Partition Key
                 ],
                 KeySchema=[
                     {"AttributeName": "id", "KeyType": "HASH"},  # Primary Key
@@ -78,7 +79,15 @@ class Database:
                             {"AttributeName": "timestamp", "KeyType": "RANGE"},  # GSI Sort Key
                         ],
                         "Projection": {"ProjectionType": "ALL"},
-                    }
+                    },
+                    {
+                        "IndexName": "LocationIndex",
+                        "KeySchema": [
+                            {"AttributeName": "location", "KeyType": "HASH"},  # GSI Partition Key
+                            {"AttributeName": "cpu_usage", "KeyType": "RANGE"},  # GSI Sort Key
+                        ],
+                        "Projection": {"ProjectionType": "ALL"},
+                    },
                 ],
             )
             print("Creating table, please wait...")
