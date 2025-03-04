@@ -7,7 +7,8 @@ Resource
 - https://docs.aws.amazon.com/code-library/latest/ug/python_3_dynamodb_code_examples.html
 - https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/dynamodb.html
 """
-
+import time
+import uuid
 from typing import List, Optional
 
 from boto3.dynamodb.conditions import Key
@@ -33,7 +34,7 @@ class CpuMetricsService:
 
         Returns:
             List[CpuMetricSchema]: list of cpu metrics data with all attributes included
-        """        
+        """
         if params.location_value and params.operator and params.cpu_usage_value is not None:
             return self._get_filtered_cpu_metrics(cpu_metric_table, params=params)
         else:
@@ -50,13 +51,13 @@ class CpuMetricsService:
 
         Returns:
             List[CpuMetricSchema]: list of cpu metrics data with all attributes included
-        """        
+        """
         all_cpu_metrics = []
 
         # scan for all items in the table where the timestamp is greater than 0 (all items with a timestamp)
         scan_kwargs = {
             "FilterExpression": Key("timestamp").gt(0),
-            "ProjectionExpression": "#timestamp, #cpu_usage, #device, #location, #unit, #topic, #loop_count, #project, #version",
+            "ProjectionExpression": "#id, #timestamp, #cpu_usage, #device, #location, #unit, #topic, #loop_count, #project, #version",
             "ExpressionAttributeNames": {
                 "#timestamp": "timestamp",
                 "#cpu_usage": "cpu_usage",
@@ -67,6 +68,7 @@ class CpuMetricsService:
                 "#loop_count": "loop_count",
                 "#project": "project",
                 "#version": "version",
+                "#id": "id",
             },
         }
 
@@ -100,42 +102,33 @@ class CpuMetricsService:
 
         Returns:
             List[CpuMetricSchema]: list of cpu metrics data with all attributes included
-        """        
-        if params.operator not in {"eq", "gt", "lt", "*"}:
-            raise InvalidRequestException()
-
-        if params.location_value not in {"Home", "Office", "Factory", "*"}:
-            raise InvalidRequestException()
-        
+        """
         cpu_usage_value = int(params.cpu_usage_value)
 
-        if cpu_usage_value < 0 or cpu_usage_value > 100:
-            raise InvalidRequestException()
-        
         if params.location_value == "*":
             return self._get_all_devices_filtered_by_cpu_usage(cpu_metric_table, cpu_usage_value, params.operator)
-        
+
         key_expressions = {
             "eq": Key("cpu_usage").eq(cpu_usage_value),
             "gt": Key("cpu_usage").gt(cpu_usage_value),
             "lt": Key("cpu_usage").lt(cpu_usage_value),
-            "*": Key("cpu_usage").gt(0), # all values
+            "*": Key("cpu_usage").gt(0),  # all values
         }
 
         try:
             response = cpu_metric_table.query(
                 IndexName="LocationIndex",  # Use the GSI name
-                KeyConditionExpression=(
-                    Key("location").eq(params.location_value) & key_expressions[params.operator]
-                ),
+                KeyConditionExpression=(Key("location").eq(params.location_value) & key_expressions[params.operator]),
             )
         except ClientError as err:
             print(f"ClientError: {err}")
             raise ServerException()
         else:
             return response.get("Items", [])
-        
-    def _get_all_devices_filtered_by_cpu_usage(self, cpu_metric_table: Table, cpu_usage: int, operator: str) -> List[CpuMetricSchema]:
+
+    def _get_all_devices_filtered_by_cpu_usage(
+        self, cpu_metric_table: Table, cpu_usage: int, operator: str
+    ) -> List[CpuMetricSchema]:
         """get all devices filtered by cpu usage
 
         Args:
@@ -145,16 +138,39 @@ class CpuMetricsService:
 
         Returns:
             List[CpuMetricSchema]: list of cpu metrics data with all attributes included
-        """        
+        """
         all_cpu_metrics = self._get_all_cpu_metrics(cpu_metric_table)
 
-        if operator == '*':
+        if operator == "*":
             return all_cpu_metrics
-        
+
         filter_operators = {
             "eq": lambda x: x == cpu_usage,
             "gt": lambda x: x > cpu_usage,
             "lt": lambda x: x < cpu_usage,
         }
 
-        return [metric for metric in all_cpu_metrics if filter_operators[operator](metric['cpu_usage'])]
+        return [metric for metric in all_cpu_metrics if filter_operators[operator](metric["cpu_usage"])]
+    
+
+    def create_cpu_metric(self, cpu_metric_table: Table, cpu_metric: CpuMetricSchema) -> CpuMetricSchema:
+        """router facing method to create a cpu metric
+
+        Args:
+            cpu_metric_table (Table): cpu metric table
+            cpu_metric (CpuMetricSchema): cpu metric data
+
+        Returns:
+            CpuMetricSchema: created cpu metric data
+        """
+        item_data = cpu_metric.model_dump()
+        item_data['id'] = str(uuid.uuid4())
+        item_data['timestamp'] = int(time.time())
+
+        try:
+            cpu_metric_table.put_item(Item=item_data)
+        except ClientError as err:
+            print(f"ClientError: {err}")
+            raise ServerException()
+        else:
+            return item_data

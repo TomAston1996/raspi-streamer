@@ -8,7 +8,7 @@ from typing import Any, List, Optional
 from fastapi import APIRouter, Depends, status
 from mypy_boto3_dynamodb.service_resource import Table
 
-from .schemas import CpuMetricQueryParams, CpuMetricSchema
+from .schemas import CpuMetricCreateSchema, CpuMetricQueryParams, CpuMetricSchema
 from .service import CpuMetricsService
 
 cpu_metrics_router = APIRouter()
@@ -30,6 +30,23 @@ def get_all_cpu_metrics(
 
     Returns:
         List[CpuMetricSchema]: list of cpu metrics data with all attributes included
-    """    
-    print(f'params: {params}')
+    """
+    print(f"params: {params}")
     return cpu_metrics_service.get_cpu_metrics(cpu_metric_table=db_table, params=params)
+
+
+@cpu_metrics_router.post("", tags=["cpu_metrics"], status_code=status.HTTP_201_CREATED)
+def create_cpu_metric(
+    cpu_metric: CpuMetricCreateSchema,
+    db_table: Table = Depends(get_db_table),
+) -> CpuMetricSchema:
+    """post endpoint to create a cpu metric
+
+    Args:
+        cpu_metric (CpuMetricCreateSchema): cpu metric data
+        db_table (Table, optional): db table. Defaults to Depends(get_db_table).
+
+    Returns:
+        CpuMetricSchema: created cpu metric data
+    """
+    return cpu_metrics_service.create_cpu_metric(cpu_metric_table=db_table, cpu_metric=cpu_metric)
