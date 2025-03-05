@@ -10,14 +10,14 @@ Resource
 
 import time
 import uuid
-from typing import List, Optional
+from typing import List
 
 from boto3.dynamodb.conditions import Key
 from botocore.exceptions import ClientError
 from mypy_boto3_dynamodb.service_resource import Table
 
 from ..errors import InvalidRequestException, ServerException
-from .schemas import CpuMetricCreateSchema, CpuMetricQueryParams, CpuMetricSchema
+from .schemas import CpuMetricCreateSchema, CpuMetricQueryParams, CpuMetricSchema, CpuMetricUpdateSchema
 
 
 class CpuMetricsService:
@@ -197,3 +197,41 @@ class CpuMetricsService:
                 batch.put_item(Item=item_data)
 
         return created_items
+
+    def update_cpu_metric(self, cpu_metric_table: Table, cpu_metric: CpuMetricUpdateSchema) -> CpuMetricSchema:
+        """router facing method to update a cpu metric
+
+        Args:
+            cpu_metric_table (Table): cpu metric table
+            cpu_metric (CpuMetricUpdateSchema): cpu metric data
+
+        Returns:
+            CpuMetricSchema: updated cpu metric data
+        """
+        item_data = cpu_metric.model_dump(exclude_none=True)
+
+        update_expressions = []
+        expression_values = {}
+
+        for key, value in item_data.items():
+            if key != "id":  # Don't update the primary key
+                update_expressions.append(f"{key} = :{key}")
+                expression_values[f":{key}"] = value
+
+        if not update_expressions:
+            raise InvalidRequestException("No update fields provided")
+
+        update_expression = "SET " + ", ".join(update_expressions)
+
+        try:
+            response = cpu_metric_table.update_item(
+                Key={"id": item_data["id"]},
+                UpdateExpression=update_expression,
+                ExpressionAttributeValues=expression_values,
+                ReturnValues="ALL_NEW",
+            )
+        except ClientError as err:
+            print(f"ClientError: {err}")
+            raise ServerException()
+        else:
+            return CpuMetricSchema(**response.get("Attributes", {}))

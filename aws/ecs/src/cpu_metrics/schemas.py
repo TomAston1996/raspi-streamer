@@ -40,3 +40,15 @@ class CpuMetricCreateSchema(BaseModel):
     cpu_usage: int
     device: str
     version: str
+
+
+class CpuMetricUpdateSchema(BaseModel):
+    id: str
+    unit: Optional[str] = Field(None, description="Unit of measurement")
+    loop_count: Optional[int] = Field(None, description="Loop count")
+    project: Optional[str] = Field(None, description="Project name")
+    topic: Optional[str] = Field(None, description="Topic")
+    location: Optional[str] = Field(None, description="Location")
+    cpu_usage: Optional[int] = Field(None, description="CPU usage value")
+    device: Optional[str] = Field(None, description="Device")
+    version: Optional[str] = Field(None, description="Version")
