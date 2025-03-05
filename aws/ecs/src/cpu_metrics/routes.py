@@ -3,7 +3,7 @@ CPU Metrics routes
 Author: Tom Aston
 """
 
-from typing import Any, List, Optional
+from typing import Any, List
 
 from fastapi import APIRouter, Depends, status
 from mypy_boto3_dynamodb.service_resource import Table
@@ -85,3 +85,20 @@ def update_cpu_metric(
         CpuMetricSchema: updated cpu metric data
     """
     return cpu_metrics_service.update_cpu_metric(cpu_metric_table=db_table, cpu_metric=cpu_metric)
+
+
+@cpu_metrics_router.delete("/{cpu_metric_id}", tags=["cpu_metrics"], status_code=status.HTTP_200_OK)
+def delete_cpu_metric(
+    cpu_metric_id: str,
+    db_table: Table = Depends(get_db_table),
+) -> Any:
+    """delete endpoint to delete a cpu metric
+
+    Args:
+        cpu_metric_id (str): cpu metric id
+        db_table (Table, optional): db table. Defaults to Depends(get_db_table).
+
+    Returns:
+        Any: response
+    """
+    return cpu_metrics_service.delete_cpu_metric(cpu_metric_table=db_table, cpu_metric_id=cpu_metric_id)

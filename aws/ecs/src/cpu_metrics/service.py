@@ -235,3 +235,21 @@ class CpuMetricsService:
             raise ServerException()
         else:
             return CpuMetricSchema(**response.get("Attributes", {}))
+
+    def delete_cpu_metric(self, cpu_metric_table: Table, cpu_metric_id: str) -> CpuMetricSchema:
+        """router facing method to delete a cpu metric
+
+        Args:
+            cpu_metric_table (Table): cpu metric table
+            cpu_metric_id (str): cpu metric id
+
+        Returns:
+            CpuMetricSchema: deleted cpu metric data
+        """
+        try:
+            response = cpu_metric_table.delete_item(Key={"id": cpu_metric_id}, ReturnValues="ALL_OLD")
+        except ClientError as err:
+            print(f"ClientError: {err}")
+            raise ServerException()
+        else:
+            return CpuMetricSchema(**response.get("Attributes", {}))
