@@ -153,10 +153,10 @@ class TestIntegrationCpuMetricRoutes:
 
         Args:
             test_client (TestClient): test client from conftest.py
-        """        
+        """
 
         invalid_payload = {"location": 123, "cpu_usage": "invalid_string"}
-        
+
         response = test_client.put(self.BASE_URL, json=invalid_payload)
 
         assert response.status_code == 422
