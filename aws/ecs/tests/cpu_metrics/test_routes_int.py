@@ -137,3 +137,26 @@ class TestIntegrationCpuMetricRoutes:
 
         assert delete_response.status_code == 200
         assert delete_response.json()["id"] == cpu_metric_id
+
+    def test_create_cpu_metric_missing_fields(self, test_client: TestClient) -> None:
+        """test create cpu metric with missing fields
+
+        Args:
+            test_client (TestClient): test client from conftest.py
+        """
+        response = test_client.post(self.BASE_URL, json={})
+
+        assert response.status_code == 422
+
+    def test_update_cpu_metric_missing_fields(self, test_client: TestClient) -> None:
+        """test update cpu metric with missing fields
+
+        Args:
+            test_client (TestClient): test client from conftest.py
+        """        
+
+        invalid_payload = {"location": 123, "cpu_usage": "invalid_string"}
+        
+        response = test_client.put(self.BASE_URL, json=invalid_payload)
+
+        assert response.status_code == 422
