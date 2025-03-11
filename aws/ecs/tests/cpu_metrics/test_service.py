@@ -21,7 +21,7 @@ class TestUnitCpuMetricsService:
 
         Returns:
             Mock: mock of db table
-        """        
+        """
         return Mock()
 
     @pytest.mark.parametrize(
