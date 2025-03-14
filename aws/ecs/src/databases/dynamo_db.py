@@ -8,7 +8,7 @@ from botocore.exceptions import ClientError
 from mypy_boto3_dynamodb import DynamoDBClient, DynamoDBServiceResource
 from mypy_boto3_dynamodb.service_resource import Table
 
-from .config import EnvrinomentEnum, config_manager
+from ..config import EnvrinomentEnum, config_manager
 
 if config_manager.ENVIRONMENT == EnvrinomentEnum.LOCAL:
     dynamodb_client = boto3.client(
@@ -22,7 +22,7 @@ else:  # Production (ECS)
     dynamodb_resource = boto3.resource("dynamodb")
 
 
-class Database:
+class CpuMetricDatabase:
     """
     DynamoDB Database
     """
@@ -121,9 +121,9 @@ class Database:
 
 
 @lru_cache()
-def get_database() -> Database:
+def get_database() -> CpuMetricDatabase:
     """Create and cache a Database instance."""
-    return Database(config_manager.DB_TABLE_NAME, dynamodb_resource, dynamodb_client)
+    return CpuMetricDatabase(config_manager.DB_TABLE_NAME, dynamodb_resource, dynamodb_client)
 
 
 def get_db_table() -> Table:

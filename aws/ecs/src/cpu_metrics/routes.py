@@ -13,7 +13,7 @@ from .service import CpuMetricsService
 
 cpu_metrics_router = APIRouter()
 cpu_metrics_service = CpuMetricsService()
-from ..database import get_db_table
+from ..databases.dynamo_db import get_db_table
 
 
 @cpu_metrics_router.get("", tags=["cpu_metrics"], status_code=status.HTTP_200_OK)

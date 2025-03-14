@@ -699,6 +699,7 @@ dependencies = [
     { name = "pydantic-settings" },
     { name = "pytest" },
     { name = "python-dotenv" },
+    { name = "python-multipart" },
 ]
 
 [package.metadata]
@@ -714,6 +715,7 @@ requires-dist = [
     { name = "pydantic-settings", specifier = ">=2.8.0" },
     { name = "pytest", specifier = ">=8.3.4" },
     { name = "python-dotenv", specifier = ">=1.0.1" },
+    { name = "python-multipart", specifier = ">=0.0.20" },
 ]
 
 [[package]]
