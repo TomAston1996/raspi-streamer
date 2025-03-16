@@ -6,6 +6,8 @@ Author: Tom Aston
 from unittest.mock import Mock
 
 import pytest
+from mypy_boto3_dynamodb import DynamoDBClient, DynamoDBServiceResource
+from mypy_boto3_dynamodb.service_resource import Table
 from src.database import Database
 
 
@@ -22,8 +24,8 @@ class TestUnitDatabase:
             Mock: mock of database object
         """
         table_name: str = "TestTable"
-        dynamodb_resource = Mock()
-        dynamodb_client = Mock()
+        dynamodb_resource = Mock(spec=DynamoDBServiceResource)
+        dynamodb_client = Mock(spec=DynamoDBClient)
         mock_db = Database(table_name, dynamodb_resource, dynamodb_client)
         return mock_db
 
