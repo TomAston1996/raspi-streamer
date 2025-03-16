@@ -4,6 +4,7 @@ Author: Tom Aston
 """
 
 from enum import Enum
+from functools import cached_property
 
 from pydantic_settings import BaseSettings
 
@@ -47,14 +48,16 @@ class ConfigManager(BaseSettings):
 
     DATABASE_URI_FORMAT: str = "{db_engine}://{user}:{password}@{host}:{port}/{database}"
 
-    USER_DATABASE_URI: str = "{db_engine}://{user}:{password}@{host}:{port}/{database}".format(
-        db_engine=USER_DB_ENGINE,
-        user=POSTGRES_USER,
-        password=POSTGRES_PASSWORD,
-        host=POSTGRES_HOST_NAME,
-        port=POSTGRES_HOST_PORT,
-        database=POSTGRES_DB,
-    )
+    @cached_property
+    def USER_DATABASE_URI(self) -> str:
+        return self.DATABASE_URI_FORMAT.format(
+            db_engine=self.USER_DB_ENGINE,
+            user=self.POSTGRES_USER,
+            password=self.POSTGRES_PASSWORD,
+            host=self.POSTGRES_HOST_NAME,
+            port=self.POSTGRES_HOST_PORT,
+            database=self.POSTGRES_DB,
+        )
     # ---------------------------------------------------
 
     class Config:
