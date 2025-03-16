@@ -37,6 +37,26 @@ class ConfigManager(BaseSettings):
     DYNAMODB_REGION: str
     # ---------------------------------------------------
 
+    # Postgres User config-------------------------------
+    POSTGRES_PASSWORD: str
+    POSTGRES_DB: str
+    POSTGRES_USER: str
+    POSTGRES_HOST_PORT: str
+    POSTGRES_HOST_NAME: str
+    USER_DB_ENGINE: str = "postgresql"
+
+    DATABASE_URI_FORMAT: str = "{db_engine}://{user}:{password}@{host}:{port}/{database}"
+
+    USER_DATABASE_URI: str = "{db_engine}://{user}:{password}@{host}:{port}/{database}".format(
+        db_engine=USER_DB_ENGINE,
+        user=POSTGRES_USER,
+        password=POSTGRES_PASSWORD,
+        host=POSTGRES_HOST_NAME,
+        port=POSTGRES_HOST_PORT,
+        database=POSTGRES_DB,
+    )
+    # ---------------------------------------------------
+
     class Config:
         case_sensitive = True
         env_file = ".env"
