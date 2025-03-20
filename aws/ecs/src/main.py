@@ -10,6 +10,7 @@ from .auth.routes import auth_router
 from .config import config_manager
 from .cpu_metrics.routes import cpu_metrics_router
 from .errors import register_all_errors
+from .middleware import register_middleware
 
 
 class AppCreator:
@@ -37,18 +38,11 @@ class AppCreator:
             """
             return {"message": "server is running"}
 
-        self.app.add_middleware(
-            CORSMiddleware,
-            allow_origins=["*"],
-            allow_credentials=True,
-            allow_methods=["*"],
-            allow_headers=["*"],
-        )
-
         self.app.include_router(cpu_metrics_router, prefix=f"/api/{config_manager.VERSION}/cpu_metrics")
         self.app.include_router(auth_router, prefix=f"/api/{config_manager.VERSION}/auth")
 
         register_all_errors(self.app)
+        register_middleware(self.app)
 
 
 app_creator = AppCreator()
