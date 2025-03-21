@@ -4,7 +4,6 @@ Author: Tom Aston
 """
 
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
 
 from .auth.routes import auth_router
 from .config import config_manager

@@ -9,7 +9,6 @@ Author: Tom Aston
 """
 
 import boto3
-from fastapi import HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from mypy_boto3_cognito_idp import CognitoIdentityProviderClient
 from src.config import config_manager
