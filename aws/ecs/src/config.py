@@ -58,7 +58,16 @@ class ConfigManager(BaseSettings):
             port=self.POSTGRES_HOST_PORT,
             database=self.POSTGRES_DB,
         )
+
     # ---------------------------------------------------
+
+    # AWS Cognito config-------------------------------
+    COGNITO_USER_POOL_ID: str
+    COGNITO_USER_POOL_CLIENT_ID: str
+    COGNITO_USER_POOL_REGION: str
+    COGNITO_JWT_SECRET: str
+    COGNITO_CLIENT_SECRET: str
+    # --------------------------------------------------
 
     class Config:
         case_sensitive = True

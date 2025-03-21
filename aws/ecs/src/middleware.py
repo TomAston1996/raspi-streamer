@@ -24,8 +24,12 @@ def register_middleware(app: FastAPI) -> None:
 
     # Add custom logging middleware
     @app.middleware("http")
-    def custom_logging(request: Request, call_next: Callable[[Request], Response]) -> Response:
+    async def custom_logging(request: Request, call_next: Callable[[Request], Response]) -> Response:
         """custom logging middleware
+
+        The middleware logs the request method, URL path, response status code, and the time taken to process the request.
+        The way it works is by intercepting the request before it is processed by the route handler. The middleware then calls
+        the next middleware or route handler and intercepts the response before it is returned.
 
         Args:
             request (Request): request to intercept
@@ -33,10 +37,10 @@ def register_middleware(app: FastAPI) -> None:
 
         Returns:
             Response: returns the response after middleware processing
-        """        
-        start_time = time.time()  # start time
+        """
+        start_time = time.time()
 
-        response: Response = call_next(request)  # call the next middleware or route handler
+        response: Response = await call_next(request)  # call the next middleware or route handler
 
         process_time = time.time() - start_time
 
@@ -45,7 +49,7 @@ def register_middleware(app: FastAPI) -> None:
         print(message)
 
         return response
-    
+
     app.add_middleware(
         CORSMiddleware,
         allow_origins=["*"],

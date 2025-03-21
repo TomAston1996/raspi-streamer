@@ -16,3 +16,7 @@ certs/
 
 # env files
 .env
+
+#uv specific folders
+show/
+sync/

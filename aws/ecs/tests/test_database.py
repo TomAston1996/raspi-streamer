@@ -28,7 +28,7 @@ class TestUnitDatabase:
         dynamodb_resource = Mock(spec=DynamoDBServiceResource)
         dynamodb_client = Mock(spec=DynamoDBClient)
         mock_db = CpuMetricDatabase(table_name, dynamodb_resource, dynamodb_client)
-        
+
         return mock_db
 
     def test_get_table(self, mock_database_object: CpuMetricDatabase) -> None:

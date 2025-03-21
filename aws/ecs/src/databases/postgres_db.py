@@ -23,7 +23,7 @@ class UsersDatabase:
 
         Args:
             db_url (str): database url
-        """        
+        """
         self.engine = create_engine(
             db_url,
             echo=False,  # Set to True to see SQL queries in the console on FastAPI
@@ -31,8 +31,7 @@ class UsersDatabase:
         self.session_local = sessionmaker(autocommit=False, autoflush=False, bind=self.engine, class_=Session)
 
     def create_database(self) -> None:
-        """Create all the database tables defined in models if they don't already exist
-        """
+        """Create all the database tables defined in models if they don't already exist"""
         BaseModel.metadata.create_all(self.engine)
 
     def get_db(self) -> Generator[Session, None, None]:
