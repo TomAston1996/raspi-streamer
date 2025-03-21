@@ -13,6 +13,8 @@ from .service import CpuMetricsService
 
 cpu_metrics_router = APIRouter()
 cpu_metrics_service = CpuMetricsService()
+from src.auth.service import oauth2_scheme
+
 from ..databases.dynamo_db import get_db_table
 
 
@@ -20,6 +22,7 @@ from ..databases.dynamo_db import get_db_table
 def get_all_cpu_metrics(
     params: CpuMetricQueryParams = Depends(),
     db_table: Table = Depends(get_db_table),
+    _=Depends(oauth2_scheme),
 ) -> List[CpuMetricSchema]:
     """get endpoint for all cpu metrics
     will return all cpu metrics if no query parameters are provided
@@ -39,6 +42,7 @@ def get_all_cpu_metrics(
 def create_cpu_metric(
     cpu_metric: CpuMetricCreateSchema,
     db_table: Table = Depends(get_db_table),
+    _=Depends(oauth2_scheme),
 ) -> CpuMetricSchema:
     """post endpoint to create a cpu metric
 
@@ -56,6 +60,7 @@ def create_cpu_metric(
 def batch_create_cpu_metrics(
     cpu_metrics: List[CpuMetricCreateSchema],
     db_table: Table = Depends(get_db_table),
+    _=Depends(oauth2_scheme),
 ) -> List[CpuMetricSchema]:
     """post endpoint to create multiple cpu metrics
 
@@ -74,6 +79,7 @@ def batch_create_cpu_metrics(
 def update_cpu_metric(
     cpu_metric: CpuMetricUpdateSchema,
     db_table: Table = Depends(get_db_table),
+    _=Depends(oauth2_scheme),
 ) -> CpuMetricSchema:
     """put endpoint to update a cpu metric
 
@@ -91,6 +97,7 @@ def update_cpu_metric(
 def delete_cpu_metric(
     cpu_metric_id: str,
     db_table: Table = Depends(get_db_table),
+    _=Depends(oauth2_scheme),
 ) -> Any:
     """delete endpoint to delete a cpu metric
 

@@ -1,11 +1,11 @@
-'''
+"""
 Module to interact with DynamoDB database
 
 The CpuMetricDatabase class is used to interact with the DynamoDB table that stores the CPU metrics data.
 There are functions to create the table, check if it exists, and populate it with test data.
 
 Author: Tom Aston
-'''
+"""
 
 import random
 import time
