@@ -1,5 +1,9 @@
 """
 Config Manager
+
+The config manager is used to manage the configuration settings for the application. The settings are loaded from the .env file 
+and can be accessed using the config_manager object.
+
 Author: Tom Aston
 """
 

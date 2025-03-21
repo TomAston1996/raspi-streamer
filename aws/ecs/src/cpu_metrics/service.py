@@ -1,11 +1,15 @@
 """
 Service module for CPU metrics
-Author: Tom Aston
+
+The service module contains the business logic for the CPU metrics API. The service layer allows for separation 
+of concerns between the API routes and the database operations. Boto3 is used to interact with the DynamoDB table.
 
 Resource
 --------
 - https://docs.aws.amazon.com/code-library/latest/ug/python_3_dynamodb_code_examples.html
 - https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/dynamodb.html
+
+Author: Tom Aston
 """
 
 import time

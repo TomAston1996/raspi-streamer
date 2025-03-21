@@ -1,5 +1,10 @@
 """
-This module contains all the custom exceptions that are raised in the fastapi app
+This module contains all the custom exceptions that are raised in the fastapi app.
+
+Custom exceptions are used to provide more information to the user about what went wrong as opposed to the generic exceptions
+that are raised by the FastAPI framework via HTTP exceptions.The exceptions are raised in the service layer and caught in 
+the main.py file where they are converted into a JSON response and returned to the user.
+
 Author: Tom Aston
 """
 

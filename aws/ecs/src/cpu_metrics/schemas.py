@@ -1,5 +1,9 @@
 """
 Schema for the CPU metrics
+
+The schema defines the structure of the CPU metrics data including the attributes and their types. The schema is used to 
+validate the data before it is stored in the database or returned to the client.
+
 Author: Tom Aston
 """
 

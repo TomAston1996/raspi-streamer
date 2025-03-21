@@ -1,5 +1,11 @@
 """
 Module to register middleware
+
+This is the module that registers middleware for the FastAPI app. Middleware currently being used is custom logging middleware
+and CORS middleware. The custom logging middleware logs the request method, URL path, response status code, and the time taken 
+to process the request and CORS middleware is used to allow cross-origin requests. At the moment, the CORS middleware is set to
+allow only localhost and test origins.
+
 Author: Tom Aston
 """
 

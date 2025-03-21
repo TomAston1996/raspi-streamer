@@ -1,5 +1,8 @@
 """
 FastAPI app entry point
+
+This is the entry point for the FastAPI app. It creates the app and registers all the routes, middleware and error handlers.
+
 Author: Tom Aston
 """
 
