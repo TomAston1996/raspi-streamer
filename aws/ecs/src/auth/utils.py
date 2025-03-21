@@ -8,7 +8,6 @@ import base64
 import hashlib
 import hmac
 import json
-import time
 from datetime import datetime, timedelta
 
 import jwt
@@ -56,20 +55,25 @@ def decode_jwt(token: str) -> dict:
 
     try:
         # Decode and verify the token
-        decoded_token = jwt.decode(
+        decoded_token: dict = jwt.decode(
             token,
             public_key,
             algorithms=["RS256"],
-            audience=CLIENT_ID,
             issuer=f"https://cognito-idp.{COGNITO_REGION}.amazonaws.com/{USER_POOL_ID}",
         )
 
+        if decoded_token.get("token_use") != "access":
+            raise ValueError("Invalid token: Expected an access token")
+
         return decoded_token
-    except jwt.ExpiredSignatureError:
+    except jwt.ExpiredSignatureError as ese:
+        print(ese)
         raise HTTPException(status_code=401, detail="Token has expired")
-    except jwt.InvalidTokenError:
+    except jwt.InvalidTokenError as ite:
+        print(ite)
         raise HTTPException(status_code=401, detail="Invalid token")
     except Exception as e:
+        print(e)
         raise HTTPException(status_code=500, detail="Oops! Something went wrong")
 
 
@@ -90,7 +94,7 @@ def get_secret_hash(username: str, client_id: str, client_secret: str) -> str:
 
 def create_jwt_token(username: str) -> str:
     """
-    ! Deprecated function
+    #! DEPRECATED FUNCTION ----> USE AWS Cognito to create JWT token
     Create a JWT token for the user
 
     Args:
@@ -106,7 +110,7 @@ def create_jwt_token(username: str) -> str:
 
 def decode_jwt_token(token: str) -> dict:
     """
-    ! Deprecated function
+    #! DEPRECATED ----> USE decode_jwt(token: str) instead
     Decode the JWT token
 
     Args:

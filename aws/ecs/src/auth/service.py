@@ -181,7 +181,7 @@ class AuthService:
             print(e)
             raise ServerException("An error occurred while resetting the user's password")
 
-    def get_current_user(token: str) -> str:
+    def get_current_user(self, token: str) -> str:
         """get the current user
 
         Args:
@@ -194,5 +194,4 @@ class AuthService:
             str: username
         """
         decoded_token = decode_jwt(token)
-        print(decoded_token)
-        return decoded_token["sub"]
+        return decoded_token["username"]
