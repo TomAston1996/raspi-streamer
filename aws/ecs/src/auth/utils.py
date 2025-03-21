@@ -1,7 +1,7 @@
 """
 Helper functions for authentication including decoding JWT tokens and creating JWT tokens.
 
-The get public keys function gets the public keys from AWS Cognito and the decode JWT function 
+The get public keys function gets the public keys from AWS Cognito and the decode JWT function
 decodes the JWT token. The get secret hash function gets the secret hash for the user and the create
 JWT token function creates a JWT token for the user.
 
@@ -19,6 +19,7 @@ import jwt.algorithms
 import requests
 from fastapi import HTTPException
 from src.config import config_manager
+from src.errors import AccessTokenException, InvalidTokenException, ServerException
 
 USER_POOL_ID = config_manager.COGNITO_USER_POOL_ID
 CLIENT_ID = config_manager.COGNITO_USER_POOL_CLIENT_ID
@@ -37,11 +38,16 @@ def get_cognito_public_keys() -> dict:
 
 
 def decode_jwt(token: str) -> dict:
-    """
-    Decode the JWT token
+    """decode the JWT token from AWS Cognito
 
     Args:
-        token (str): JWT token
+        token (str): jwt token
+
+    Raises:
+        ValueError: raised when the public key is not found in the JWKs
+        AccessTokenException: raised when the token use is not access token
+        InvalidTokenException: raised when the token is invalid due to expired signature or invalid token
+        ServerException: raised when there is an internal server error
 
     Returns:
         dict: decoded token
@@ -67,18 +73,15 @@ def decode_jwt(token: str) -> dict:
         )
 
         if decoded_token.get("token_use") != "access":
-            raise ValueError("Invalid token: Expected an access token")
+            raise AccessTokenException()
 
         return decoded_token
     except jwt.ExpiredSignatureError as ese:
-        print(ese)
-        raise HTTPException(status_code=401, detail="Token has expired")
+        raise InvalidTokenException()
     except jwt.InvalidTokenError as ite:
-        print(ite)
-        raise HTTPException(status_code=401, detail="Invalid token")
+        raise InvalidTokenException()
     except Exception as e:
-        print(e)
-        raise HTTPException(status_code=500, detail="Oops! Something went wrong")
+        raise ServerException()
 
 
 def get_secret_hash(username: str, client_id: str, client_secret: str) -> str:
