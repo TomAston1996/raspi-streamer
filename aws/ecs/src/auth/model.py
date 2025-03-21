@@ -1,6 +1,7 @@
 """
-This file contains the routes for the authentication module.
-The routes are used to authenticate the user and provide a token for accessing the API.
+This file contains the models for the authentication module.
+
+The models are used to define the structure of the data that is passed between the client and the server.
 
 Author: Tom Aston
 """

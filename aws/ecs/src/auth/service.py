@@ -1,5 +1,9 @@
 """
-Authentication service module
+Authentication service module.
+
+The authentication service module provides the functionality to sign up, sign in, confirm email, reset password,
+and log out a user from the Cognito user pool. The purpose of the module is to provide the business logic for the
+authentication routes.
 
 Author: Tom Aston
 """
@@ -23,9 +27,15 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
 class AuthService:
-    """Authentication service class"""
+    """Authentication service class
+    
+    The authentication service class provides the functionality to sign up, sign in, confirm email, reset password,
+    and log out a user from the Cognito user pool.
+    """
 
     def __init__(self) -> None:
+        """initialize the authentication service class
+        """        
         self.cognito_client: CognitoIdentityProviderClient = boto3.client("cognito-idp", region_name=COGNITO_REGION)
 
     def signup(self, user: User) -> User:

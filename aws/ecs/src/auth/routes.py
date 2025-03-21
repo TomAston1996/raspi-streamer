@@ -1,5 +1,6 @@
 """
 This file contains the routes for the authentication module.
+
 The routes are used to authenticate the user and provide a token for accessing the API.
 
 Author: Tom Aston

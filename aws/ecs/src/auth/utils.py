@@ -1,5 +1,9 @@
 """
-Helper functions for authentication
+Helper functions for authentication including decoding JWT tokens and creating JWT tokens.
+
+The get public keys function gets the public keys from AWS Cognito and the decode JWT function 
+decodes the JWT token. The get secret hash function gets the secret hash for the user and the create
+JWT token function creates a JWT token for the user.
 
 Author: Tom Aston
 """
