@@ -43,7 +43,7 @@ Below is the data flow description:
 | Docker | [docker-download](https://www.docker.com/products/docker-desktop/) | Local PC |
 | UV| [uv-github](https://github.com/astral-sh/uv) | Local PC/Raspberry Pi |
 
-### AWS Infrastructure
+### AWS ETL Pipeline Setup
 
 1. Clone the repository onto your Local PC.
 ```
@@ -66,6 +66,33 @@ Default output format [None]: json (or text, table)
    - Create an IoT Policy and attach it to the certificate.
    - Save the IoT Core endpoint for Raspberry Pi configuration later.
    - You can test the set up later using MQTT Test Client once the Raspberry Pi has been set up.
+
+### AWS ECS API Setup
+
+#### Create Cognito User Pool for Authentication
+1. Create a cognito user pool in AWS.
+2. Enable the ```ALLOW_USER_PASSWORD_AUTH``` OAuth flow in your App Client.
+3. Ensure the following parameters are updated in your ```.env``` file
+```
+COGNITO_USER_POOL_ID=<your_user_pool_id>
+COGNITO_USER_POOL_CLIENT_ID=<your_app_client_id>
+COGNITO_USER_POOL_REGION=<your_aws_region>
+COGNITO_CLIENT_SECRET=<your_client_secret_for_secret_hash>
+```
+
+#### Deploy Docker File to ECS
+1. Build docker image locally with ```docker build -t my-app .```
+2. Tag the image ```docker tag my-app:latest <aws_account_id>.dkr.ecr.<your-region>.amazonaws.com/my-app:latest```
+3. Push the image to ECR ```docker push <aws_account_id>.dkr.ecr.<your-region>.amazonaws.com/my-app:latest```
+4. Create an ECS cluster.
+5. Create a new task definition with the appropriate port mappings.
+6. Create and attach an IAM role to allow your ECS task to perform CRUD operations on DynamoDB.
+7. Ensure the following environment variables are set in your ```.env``` file for dev and prod environments.
+```
+DB_TABLE_NAME=<your_table_name>
+DYNAMODB_ENDPOINT=<your_local_docker_endpoint>
+DYNAMODB_REGION=<your_aws_region>
+```
 
 ### Raspberry Pi Setup
 1. Clone the repository onto your Raspberry Pi
