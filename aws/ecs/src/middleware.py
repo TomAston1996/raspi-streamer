@@ -2,7 +2,7 @@
 Module to register middleware
 
 This is the module that registers middleware for the FastAPI app. Middleware currently being used is custom logging middleware
-and CORS middleware. The custom logging middleware logs the request method, URL path, response status code, and the time taken 
+and CORS middleware. The custom logging middleware logs the request method, URL path, response status code, and the time taken
 to process the request and CORS middleware is used to allow cross-origin requests. At the moment, the CORS middleware is set to
 allow only localhost and test origins.
 
@@ -67,4 +67,4 @@ def register_middleware(app: FastAPI) -> None:
     # Add TrustedHostMiddleware
     # This middleware checks the Host header of the request against a list of allowed hosts.
     # * At the moment trusted hosts are set to just localhost
-    app.add_middleware(TrustedHostMiddleware, allowed_hosts=["localhost", "127.0.0.1", "test"])
+    # app.add_middleware(TrustedHostMiddleware, allowed_hosts=["localhost", "127.0.0.1", "test"])

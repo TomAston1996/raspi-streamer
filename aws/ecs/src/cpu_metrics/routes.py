@@ -1,7 +1,7 @@
 """
 CPU Metrics API routes
 
-Routes for the CPU Metrics API including get, post, put, and delete endpoints. The routes are used to interact with the 
+Routes for the CPU Metrics API including get, post, put, and delete endpoints. The routes are used to interact with the
 CPU Metrics data in the DynamoDB table.
 
 Author: Tom Aston

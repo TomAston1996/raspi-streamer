@@ -19,18 +19,18 @@ class TestIntegrationCpuMetricRoutes:
 
     BASE_URL = f"/api/{config_manager.VERSION}/cpu_metrics"
 
-    def test_get_all_cpu_metrics(self, test_client: TestClient) -> None:
+    def test_get_all_cpu_metrics(self, test_client: TestClient, auth_token: str) -> None:
         """test get all cpu metrics
 
         Args:
             test_client (TestClient): test client from conftest.py
         """
-        response = test_client.get(self.BASE_URL)
+        response = test_client.get(url=self.BASE_URL, headers={"Authorization": f"Bearer {auth_token}"})
         assert response.status_code == 200
         assert len(response.json()) > 0
 
     @pytest.mark.parametrize("location_value", ["Home", "Office", "Factory"])
-    def test_get_cpu_metric_by_location(self, location_value: str, test_client: TestClient) -> None:
+    def test_get_cpu_metric_by_location(self, location_value: str, test_client: TestClient, auth_token: str) -> None:
         """test get cpu metric by location
 
         Args:
@@ -41,7 +41,8 @@ class TestIntegrationCpuMetricRoutes:
         CPU_USAGE_VALUE = 0
 
         response = test_client.get(
-            f"{self.BASE_URL}?location_value={location_value}&operator={OPERATOR}&cpu_usage_value={CPU_USAGE_VALUE}"
+            url=f"{self.BASE_URL}?location_value={location_value}&operator={OPERATOR}&cpu_usage_value={CPU_USAGE_VALUE}",
+            headers={"Authorization": f"Bearer {auth_token}"},
         )
 
         assert response.status_code == 200
@@ -49,7 +50,7 @@ class TestIntegrationCpuMetricRoutes:
             assert location_value == cpu_metric["location"]
 
     @pytest.mark.parametrize("operator", ["gt", "lt"])
-    def test_get_cpu_metric_by_cpu_usage(self, operator: str, test_client: TestClient) -> None:
+    def test_get_cpu_metric_by_cpu_usage(self, operator: str, test_client: TestClient, auth_token: str) -> None:
         """test get cpu metric by cpu usage
 
         Args:
@@ -57,7 +58,8 @@ class TestIntegrationCpuMetricRoutes:
         """
         CPU_USAGE_VALUE = 50
         response = test_client.get(
-            f"{self.BASE_URL}?location_value=*&operator={operator}&cpu_usage_value={CPU_USAGE_VALUE}"
+            url=f"{self.BASE_URL}?location_value=*&operator={operator}&cpu_usage_value={CPU_USAGE_VALUE}",
+            headers={"Authorization": f"Bearer {auth_token}"},
         )
 
         assert response.status_code == 200
@@ -67,7 +69,9 @@ class TestIntegrationCpuMetricRoutes:
             elif operator == "lt":
                 assert cpu_metric["cpu_usage"] < CPU_USAGE_VALUE
 
-    def test_create_cpu_metric(self, test_client: TestClient, test_create_payload: list[CpuMetricCreateSchema]) -> None:
+    def test_create_cpu_metric(
+        self, test_client: TestClient, test_create_payload: list[CpuMetricCreateSchema], auth_token: str
+    ) -> None:
         """test create cpu metric
 
         Args:
@@ -76,14 +80,14 @@ class TestIntegrationCpuMetricRoutes:
         """
         payload = test_create_payload[0].model_dump()
 
-        response = test_client.post(self.BASE_URL, json=payload)
+        response = test_client.post(url=self.BASE_URL, json=payload, headers={"Authorization": f"Bearer {auth_token}"})
 
         assert response.status_code == 201
         assert response.json()["location"] == payload["location"]
         assert response.json()["cpu_usage"] == payload["cpu_usage"]
 
     def test_batch_create_cpu_metrics(
-        self, test_client: TestClient, test_create_payload: list[CpuMetricCreateSchema]
+        self, test_client: TestClient, test_create_payload: list[CpuMetricCreateSchema], auth_token: str
     ) -> None:
         """test batch create cpu metrics
 
@@ -93,12 +97,16 @@ class TestIntegrationCpuMetricRoutes:
         """
         payload = [cpu_metric.model_dump() for cpu_metric in test_create_payload]
 
-        response = test_client.post(f"{self.BASE_URL}/batch", json=payload)
+        response = test_client.post(
+            url=f"{self.BASE_URL}/batch", json=payload, headers={"Authorization": f"Bearer {auth_token}"}
+        )
 
         assert response.status_code == 201
         assert len(response.json()) == len(payload)
 
-    def test_update_cpu_metric(self, test_client: TestClient, test_create_payload: list[CpuMetricCreateSchema]) -> None:
+    def test_update_cpu_metric(
+        self, test_client: TestClient, test_create_payload: list[CpuMetricCreateSchema], auth_token: str
+    ) -> None:
         """test update cpu metric
 
         Args:
@@ -110,19 +118,25 @@ class TestIntegrationCpuMetricRoutes:
             return choice([i for i in range(0, 100) if i != number_to_exclude])
 
         payload = test_create_payload[0].model_dump()
-        create_response = test_client.post(self.BASE_URL, json=payload)
+        create_response = test_client.post(
+            url=self.BASE_URL, json=payload, headers={"Authorization": f"Bearer {auth_token}"}
+        )
         cpu_metric_id = create_response.json()["id"]
 
         new_cpu_usage = get_random_int_exclude(payload["cpu_usage"])
         update_payload = {"id": cpu_metric_id, "cpu_usage": new_cpu_usage}
 
-        update_response = test_client.put(self.BASE_URL, json=update_payload)
+        update_response = test_client.put(
+            url=self.BASE_URL, json=update_payload, headers={"Authorization": f"Bearer {auth_token}"}
+        )
 
         assert update_response.status_code == 200
         assert update_response.json()["cpu_usage"] == new_cpu_usage
         assert update_response.json()["id"] == cpu_metric_id
 
-    def test_delete_cpu_metric(self, test_client: TestClient, test_create_payload: list[CpuMetricCreateSchema]) -> None:
+    def test_delete_cpu_metric(
+        self, test_client: TestClient, test_create_payload: list[CpuMetricCreateSchema], auth_token: str
+    ) -> None:
         """test delete cpu metric
 
         Args:
@@ -130,25 +144,29 @@ class TestIntegrationCpuMetricRoutes:
             test_create_payload (list[CpuMetricCreateSchema]): test payload
         """
         payload = test_create_payload[0].model_dump()
-        create_response = test_client.post(self.BASE_URL, json=payload)
+        create_response = test_client.post(
+            url=self.BASE_URL, json=payload, headers={"Authorization": f"Bearer {auth_token}"}
+        )
         cpu_metric_id = create_response.json()["id"]
 
-        delete_response = test_client.delete(f"{self.BASE_URL}/{cpu_metric_id}")
+        delete_response = test_client.delete(
+            url=f"{self.BASE_URL}/{cpu_metric_id}", headers={"Authorization": f"Bearer {auth_token}"}
+        )
 
         assert delete_response.status_code == 200
         assert delete_response.json()["id"] == cpu_metric_id
 
-    def test_create_cpu_metric_missing_fields(self, test_client: TestClient) -> None:
+    def test_create_cpu_metric_missing_fields(self, test_client: TestClient, auth_token: str) -> None:
         """test create cpu metric with missing fields
 
         Args:
             test_client (TestClient): test client from conftest.py
         """
-        response = test_client.post(self.BASE_URL, json={})
+        response = test_client.post(url=self.BASE_URL, json={}, headers={"Authorization": f"Bearer {auth_token}"})
 
         assert response.status_code == 422
 
-    def test_update_cpu_metric_missing_fields(self, test_client: TestClient) -> None:
+    def test_update_cpu_metric_missing_fields(self, test_client: TestClient, auth_token: str) -> None:
         """test update cpu metric with missing fields
 
         Args:
@@ -157,6 +175,8 @@ class TestIntegrationCpuMetricRoutes:
 
         invalid_payload = {"location": 123, "cpu_usage": "invalid_string"}
 
-        response = test_client.put(self.BASE_URL, json=invalid_payload)
+        response = test_client.put(
+            url=self.BASE_URL, json=invalid_payload, headers={"Authorization": f"Bearer {auth_token}"}
+        )
 
         assert response.status_code == 422

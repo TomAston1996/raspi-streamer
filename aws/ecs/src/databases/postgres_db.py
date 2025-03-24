@@ -2,7 +2,7 @@
 Postgres Database for Users
 
 This module contains the database class for the Users database. It is used to create the database tables and get the database session.
-This could potentially be used for user custom authorisation in the future - whereas AWS Cognito would be used for user authentication. 
+This could potentially be used for user custom authorisation in the future - whereas AWS Cognito would be used for user authentication.
 At the moment however, the database is not used.
 
 Author: Tom Aston

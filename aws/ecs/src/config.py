@@ -1,7 +1,7 @@
 """
 Config Manager
 
-The config manager is used to manage the configuration settings for the application. The settings are loaded from the .env file 
+The config manager is used to manage the configuration settings for the application. The settings are loaded from the .env file
 and can be accessed using the config_manager object.
 
 Author: Tom Aston
@@ -30,17 +30,15 @@ class ConfigManager(BaseSettings):
 
     ENVIRONMENT: EnvrinomentEnum = EnvrinomentEnum.LOCAL
 
-    # app config-----------------------------------------
+    # General app config----------------------------------
     VERSION: str = "0.1.0"
     PROJECT_NAME: str = "CPU Metrics API"
     PROJECT_DESCRIPTION: str = "A simple API to retrieve Raspberry Pi CPU metrics from DynamoDB"
-    # ---------------------------------------------------
 
     # AWS DynamoDB config-------------------------------
     DB_TABLE_NAME: str
     DYNAMODB_ENDPOINT: str = "http://localhost:9000"
     DYNAMODB_REGION: str
-    # ---------------------------------------------------
 
     # Postgres User config-------------------------------
     POSTGRES_PASSWORD: str
@@ -63,15 +61,17 @@ class ConfigManager(BaseSettings):
             database=self.POSTGRES_DB,
         )
 
-    # ---------------------------------------------------
-
     # AWS Cognito config-------------------------------
     COGNITO_USER_POOL_ID: str
     COGNITO_USER_POOL_CLIENT_ID: str
     COGNITO_USER_POOL_REGION: str
     COGNITO_JWT_SECRET: str
     COGNITO_CLIENT_SECRET: str
-    # --------------------------------------------------
+
+    # Test config---------------------------------------
+    TEST_USERNAME: str
+    TEST_PASSWORD: str
+    TEST_EMAIL: str
 
     class Config:
         case_sensitive = True

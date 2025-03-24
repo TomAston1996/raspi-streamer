@@ -9,13 +9,17 @@ from typing import Generator
 
 import pytest
 from fastapi.testclient import TestClient
+from src.config import config_manager
 from src.cpu_metrics.schemas import CpuMetricCreateSchema, CpuMetricSchema
 from src.main import app
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def test_client() -> Generator[TestClient, None, None]:
     """test client fixture
+
+    This fixture will create a test client for the FastAPI app. The fixture will run once per session
+    as its scope is session.
 
     Returns:
         TestClient: test client
@@ -116,3 +120,28 @@ def mock_client() -> TestClient:
     Test client
     """
     return TestClient(app)
+
+
+@pytest.fixture(scope="session")  # only need to get the auth token once
+def auth_token(test_client: TestClient) -> str:
+    """get auth token
+
+    This fixture will get the auth token for the test user. The fixure will run once per session
+    as its scope is session.
+
+    Args:
+        test_client (TestClient): test client from conftest.py
+    """
+
+    base_auth_url = f"/api/{config_manager.VERSION}/auth"
+
+    response = test_client.post(
+        f"{base_auth_url}/signin",
+        json={
+            "username": config_manager.TEST_USERNAME,
+            "password": config_manager.TEST_PASSWORD,
+            "email": config_manager.TEST_EMAIL,
+        },
+    )
+
+    return response.json()["access_token"]
