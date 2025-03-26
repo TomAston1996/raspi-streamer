@@ -80,6 +80,8 @@ def decode_jwt(token: str) -> dict:
         raise InvalidTokenException()
     except jwt.InvalidTokenError as ite:
         raise InvalidTokenException()
+    except AccessTokenException as ate:
+        raise ate
     except Exception as e:
         raise ServerException()
 
