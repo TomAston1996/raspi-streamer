@@ -1,5 +1,6 @@
 """
 Unit tests for the auth utils module
+
 Author: Tom Aston
 """
 
