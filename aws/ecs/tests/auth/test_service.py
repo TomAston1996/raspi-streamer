@@ -7,7 +7,7 @@ Author: Tom Aston
 from unittest.mock import Mock, patch
 
 import pytest
-from src.auth.model import User
+from src.auth.model import Token, User
 from src.auth.service import AuthService
 
 
@@ -56,3 +56,18 @@ class TestUnitAuthService:
         actual_response = auth_service.verify_email(sample_user)
         auth_service.cognito_client.confirm_sign_up.assert_called_once()
         assert actual_response == {"message": "Email confirmed"}
+
+    def test_signin(self, sample_user: User, auth_service: AuthService) -> None:
+        """test signin method
+
+        Args:
+            sample_user (User): mock user object
+            auth_service (AuthService): auth service object
+        """
+        auth_service.cognito_client.initiate_auth = Mock()
+        auth_service.cognito_client.initiate_auth.return_value = {"AuthenticationResult": {"AccessToken": "test_token"}}
+        actual_response = auth_service.signin(sample_user)
+        auth_service.cognito_client.initiate_auth.assert_called_once()
+
+        assert isinstance(actual_response, Token)
+        assert actual_response.model_dump() == {"access_token": "test_token", "token_type": "bearer"}
