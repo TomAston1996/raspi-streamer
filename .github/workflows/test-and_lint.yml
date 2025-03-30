@@ -33,7 +33,7 @@ jobs:
         run: pip install uv
 
       - name: Install Dependencies
-        run: uv pip install --system
+        run: uv pip install --system --all
 
       - name: Run Ruff Formatting Check
         run: uv pip install ruff && ruff check .
