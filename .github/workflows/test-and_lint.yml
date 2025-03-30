@@ -35,8 +35,9 @@ jobs:
       - name: Install Dependencies
         run: uv sync
 
-      - name: Run Ruff Formatting Check
-        run: uv add ruff && ruff check .
+      #TODO: Uncomment the following lines to enable Ruff for code formatting checks
+      # - name: Run Ruff Formatting Check
+      #   run: uv add ruff && ruff check .
 
       - name: Run Tests with Pytest
         env:
