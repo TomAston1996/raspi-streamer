@@ -1,0 +1,44 @@
+# This workflow is triggered on pushes and pull requests to the main and develop branches.
+# It installs dependencies, runs Ruff for code formatting checks, and executes tests using Pytest.
+# The workflow uses the latest version of Python 3.11 and caches pip dependencies for faster builds.
+name: Test and Lint
+
+# This workflow is triggered on pushes and pull requests to the main and develop branches.
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  test:
+    name: Run Tests and Linting
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set Up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install uv (Package Manager)
+        run: pip install uv
+
+      - name: Install Dependencies
+        run: uv pip install --system
+
+      - name: Run Ruff Formatting Check
+        run: uv pip install ruff && ruff check .
+
+      - name: Run Tests with Pytest
+        env:
+          ENV_FILE_PATH: ".env"  # Ensure tests use the correct .env file
+        run: pytest .\raspberry_pi\tests\ -v --maxfail=5 --disable-warnings
