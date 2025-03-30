@@ -46,4 +46,4 @@ jobs:
       - name: Run Tests with Pytest
         env:
           ENV_FILE_PATH: ".env"  # Ensure tests use the correct .env file
-        run: pytest .\raspberry_pi\tests\ -v --maxfail=5 --disable-warnings
+        run: pytest ./raspberry_pi/tests/ -v --maxfail=5 --disable-warnings
