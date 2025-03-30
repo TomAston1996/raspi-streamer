@@ -39,6 +39,10 @@ jobs:
       # - name: Run Ruff Formatting Check
       #   run: uv add ruff && ruff check .
 
+      # Install pytest explicitly
+      - name: Install Pytest
+        run: pip install pytest
+
       - name: Run Tests with Pytest
         env:
           ENV_FILE_PATH: ".env"  # Ensure tests use the correct .env file
