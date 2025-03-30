@@ -39,6 +39,6 @@ select = ["I"]  # Enables Ruff's import sorting (equivalent to isort)
 fixable = ["I"]  # Allows automatic fixing of import order
 
 [tool.pytest.ini_options]
-testpaths = ["raspberry_pi/tests"]
-pythonpath = ["raspberry_pi/src"]
+testpaths = ["raspberry_pi/tests", "aws/ecs/tests"]
+pythonpath = ["raspberry_pi/src", "aws/ecs/src"]
 addopts = "-v"

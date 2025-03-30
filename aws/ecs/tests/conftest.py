@@ -3,11 +3,13 @@ Global fixtures for tests
 Author: Tom Aston
 """
 
+import os
 import time
 import uuid
 from typing import Generator
 
 import pytest
+from dotenv import load_dotenv
 from fastapi.testclient import TestClient
 from src.config import config_manager
 from src.cpu_metrics.schemas import CpuMetricCreateSchema, CpuMetricSchema

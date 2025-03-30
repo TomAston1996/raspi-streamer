@@ -7,10 +7,16 @@ and can be accessed using the config_manager object.
 Author: Tom Aston
 """
 
+import os
 from enum import Enum
 from functools import cached_property
 
+from dotenv import load_dotenv
 from pydantic_settings import BaseSettings
+
+# Load the .env file from aws/ecs/
+dotenv_path = os.path.abspath("aws/ecs/.env")
+load_dotenv(dotenv_path, override=True)
 
 
 class EnvrinomentEnum(Enum):
@@ -77,6 +83,7 @@ class ConfigManager(BaseSettings):
         case_sensitive = True
         env_file = ".env"
         env_prefix = ""
+        extra = "allow"
 
 
 config_manager = ConfigManager()
