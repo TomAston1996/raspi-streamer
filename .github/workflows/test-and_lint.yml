@@ -49,6 +49,9 @@ jobs:
       # Shows the Python path and version to ensure using the correct environment
       - name: Check Python Executable
         run: which python && python --version
+
+      - name: Force Install `paho-mqtt`
+        run: uv pip install paho-mqtt
       
       # Checks if paho-mqtt is installed
       - name: Check Installed Packages
