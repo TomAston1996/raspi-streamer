@@ -53,6 +53,17 @@ jobs:
       - name: Force Install `paho-mqtt`
         run: pip install -r requirements.txt
 
+
+      - name: Create .env File at the root of the project
+        run: |
+          echo "RPI_AWS_IOT_ENDPOINT=test" >> .env
+          echo "RPI_AWS_IOT_CERTIFICATE=test" >> .env
+          echo "RPI_IOT_PRIVATE_KEY=test" >> .env
+          echo "RPI_AWS_IOT_ROOT_CA=test" >> .env
+      
+      - name: Verify .env File Exists
+        run: cat .env
+
       #TODO: Uncomment the following lines to enable Ruff for code formatting checks
       # - name: Run Ruff Formatting Check
       #   run: uv add ruff && ruff check .
