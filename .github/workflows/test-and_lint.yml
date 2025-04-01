@@ -41,6 +41,18 @@ jobs:
 
       - name: Install Dependencies
         run: uv sync
+      
+      # Check current directory and lists all files (including hidden ones) to confirm at the root of the project
+      - name: Check Current Directory
+        run: pwd && ls -la
+
+      # Shows the Python path and version to ensure using the correct environment
+      - name: Check Python Executable
+        run: which python && python --version
+      
+      # Checks if paho-mqtt is installed
+      - name: Check Installed Packages
+        run: pip list | grep paho
 
       #TODO: Uncomment the following lines to enable Ruff for code formatting checks
       # - name: Run Ruff Formatting Check
