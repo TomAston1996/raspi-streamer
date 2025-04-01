@@ -51,11 +51,7 @@ jobs:
         run: which python && python --version
 
       - name: Force Install `paho-mqtt`
-        run: uv pip install paho-mqtt
-      
-      # Checks if paho-mqtt is installed
-      - name: Check Installed Packages
-        run: pip list | grep paho
+        run: pip install -r requirements.txt
 
       #TODO: Uncomment the following lines to enable Ruff for code formatting checks
       # - name: Run Ruff Formatting Check
