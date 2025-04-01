@@ -58,7 +58,7 @@ jobs:
         run: |
           echo "RPI_AWS_IOT_ENDPOINT=test" >> .env
           echo "RPI_AWS_IOT_CERTIFICATE=test" >> .env
-          echo "RPI_IOT_PRIVATE_KEY=test" >> .env
+          echo "RPI_AWS_IOT_PRIVATE_KEY=test" >> .env
           echo "RPI_AWS_IOT_ROOT_CA=test" >> .env
       
       - name: Verify .env File Exists
