@@ -12,6 +12,7 @@ from pydantic_settings import BaseSettings
 dotenv_path = os.path.abspath(".env")
 load_dotenv(dotenv_path, override=True)
 
+
 class ConfigManager(BaseSettings):
     """
     Config manager
