@@ -3,8 +3,14 @@ Config Manager
 Author: Tom Aston
 """
 
+import os
+
+from dotenv import load_dotenv
 from pydantic_settings import BaseSettings
 
+# Load the .env file from env file at the root of the project
+dotenv_path = os.path.abspath(".env")
+load_dotenv(dotenv_path, override=True)
 
 class ConfigManager(BaseSettings):
     """
