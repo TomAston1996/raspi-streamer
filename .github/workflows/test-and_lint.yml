@@ -37,7 +37,7 @@ jobs:
         run: pip install pytest
 
       - name: Create and activate Virtual Environment
-        run: uv venv test-env && source .venv/bin/activate
+        run: uv venv && source .venv/bin/activate
 
       - name: Install Dependencies
         run: uv sync
