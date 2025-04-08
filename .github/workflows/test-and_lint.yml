@@ -64,6 +64,9 @@ jobs:
         run: cat .env
 
       #TODO: Uncomment the following lines to enable Ruff for code formatting checks
+      - name: Force Install `ruff`
+        run: pip install ruff
+
       - name: Run Ruff Formatting Check
         run: uv add ruff && ruff check .
 
